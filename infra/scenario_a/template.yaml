@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: LambdaGuard Scenario A - public function with one old package
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: python3.11
+    Tags:
+      Project: lambdaguard
+
+Resources:
+  ScenarioAFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: scenario-a-func
+      CodeUri: src/
+      Handler: app.lambda_handler
+      MemorySize: 128
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /hello
+            Method: get
+
+Outputs:
+  ApiUrl:
+    Description: Public URL of scenario A
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/hello"

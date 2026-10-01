@@ -1,0 +1,23 @@
+[
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "requests",
+    "version": "2.19.0"
+  },
+  {
+    "scenario": "scenario_b",
+    "component_type": "layer",
+    "component_name": "common-utils-layer",
+    "package": "urllib3",
+    "version": "1.24.1"
+  },
+  {
+    "scenario": "scenario_c",
+    "component_type": "function",
+    "component_name": "scenario-c-func",
+    "package": "pyyaml",
+    "version": "5.3"
+  }
+]
