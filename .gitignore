@@ -1,0 +1,22 @@
+# Secrets (kabhi push nahi karna)
+.env
+.aws/
+*.pem
+*.key
+
+# AWS SAM
+.aws-sam/
+samconfig.toml
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Node
+node_modules/
+
+# Editor / OS
+.vscode/
+.DS_Store
