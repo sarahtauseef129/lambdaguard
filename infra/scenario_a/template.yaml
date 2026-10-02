@@ -5,7 +5,7 @@ Description: LambdaGuard Scenario A - public function with one old package
 Globals:
   Function:
     Timeout: 10
-    Runtime: python3.11
+    Runtime: python3.14
     Tags:
       Project: lambdaguard
 
