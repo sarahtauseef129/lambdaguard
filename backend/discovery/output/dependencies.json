@@ -1,0 +1,51 @@
+[
+  {
+    "scenario": "scenario_c",
+    "component_type": "function",
+    "component_name": "scenario-c-func",
+    "package": "idna",
+    "version": "2.7"
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "certifi",
+    "version": "2026.7.22"
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "chardet",
+    "version": "3.0.4"
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "idna",
+    "version": "2.7"
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "requests",
+    "version": "2.19.0"
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "urllib3",
+    "version": "1.23"
+  },
+  {
+    "scenario": "scenario_b",
+    "component_type": "layer",
+    "component_name": "common-utils-layer",
+    "package": "urllib3",
+    "version": "1.24.1"
+  }
+]

@@ -1,0 +1,117 @@
+{
+  "functions": [
+    {
+      "name": "scenario-c-func",
+      "arn": "arn:aws:lambda:us-east-1:597078796873:function:scenario-c-func",
+      "role_arn": "arn:aws:iam::597078796873:role/lambdaguard-scenario-c-ScenarioCRole-td5PLhzmnT3q",
+      "runtime": "python3.14",
+      "layers": [],
+      "triggers": [
+        {
+          "type": "eventbridge",
+          "rule": "nightly-job",
+          "public": false
+        }
+      ],
+      "resources": [
+        {
+          "type": "s3",
+          "arn": "arn:aws:s3:::lambdaguard-scenario-c-sensitivebucket-gyfblyxavpju"
+        },
+        {
+          "type": "dynamodb",
+          "arn": "arn:aws:dynamodb:us-east-1:597078796873:table/Users"
+        }
+      ],
+      "iam": {
+        "attached_policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "inline_policy_names": [
+          "over-permissive-access"
+        ],
+        "allowed_actions": [
+          "dynamodb:*",
+          "s3:*"
+        ]
+      }
+    },
+    {
+      "name": "scenario-b-func-1",
+      "arn": "arn:aws:lambda:us-east-1:597078796873:function:scenario-b-func-1",
+      "role_arn": "arn:aws:iam::597078796873:role/lambdaguard-scenario-b-ScenarioBRole-nMyHNvGDkJKh",
+      "runtime": "python3.14",
+      "layers": [
+        {
+          "name": "common-utils-layer",
+          "arn": "arn:aws:lambda:us-east-1:597078796873:layer:common-utils-layer:1"
+        }
+      ],
+      "triggers": [
+        {
+          "type": "api_gateway",
+          "api_id": "utc8olw719",
+          "public": true
+        }
+      ],
+      "resources": [],
+      "iam": {
+        "attached_policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "inline_policy_names": [],
+        "allowed_actions": []
+      }
+    },
+    {
+      "name": "scenario-b-func-2",
+      "arn": "arn:aws:lambda:us-east-1:597078796873:function:scenario-b-func-2",
+      "role_arn": "arn:aws:iam::597078796873:role/lambdaguard-scenario-b-ScenarioBRole-nMyHNvGDkJKh",
+      "runtime": "python3.14",
+      "layers": [
+        {
+          "name": "common-utils-layer",
+          "arn": "arn:aws:lambda:us-east-1:597078796873:layer:common-utils-layer:1"
+        }
+      ],
+      "triggers": [],
+      "resources": [],
+      "iam": {
+        "attached_policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "inline_policy_names": [],
+        "allowed_actions": []
+      }
+    },
+    {
+      "name": "scenario-a-func",
+      "arn": "arn:aws:lambda:us-east-1:597078796873:function:scenario-a-func",
+      "role_arn": "arn:aws:iam::597078796873:role/lambdaguard-scenario-a-ScenarioAFunctionRole-cVxXGlOwdQhy",
+      "runtime": "python3.14",
+      "layers": [],
+      "triggers": [
+        {
+          "type": "api_gateway",
+          "api_id": "v664ikrkr9",
+          "public": true
+        }
+      ],
+      "resources": [],
+      "iam": {
+        "attached_policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "inline_policy_names": [],
+        "allowed_actions": []
+      }
+    }
+  ],
+  "layers": [
+    {
+      "name": "common-utils-layer",
+      "arn": "arn:aws:lambda:us-east-1:597078796873:layer:common-utils-layer:1",
+      "description": "Shared helper libraries"
+    }
+  ]
+}
