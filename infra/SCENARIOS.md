@@ -7,7 +7,7 @@ by CVSS only versus by architecture-aware score.
 |----------|------|--------------------|----------------|
 | A | Public function, low-privilege role | requests==2.19.0 | Exposed to the internet, small blast radius |
 | B | Vulnerable package in a shared layer used by 2 functions | urllib3==1.24.1 (in layer) | One bad package affects many functions |
-| C | Private function, over-permissive IAM role | pyyaml==5.3 | Not public, but a compromise reaches S3 and DynamoDB |
+| C | Private function, over-permissive IAM role | idna==2.7 | Not public, but a compromise reaches S3 and DynamoDB |
 
 ## Sensitive resources (dummy data only)
 - S3 bucket: lambdaguard-sensitive-<random-suffix>
