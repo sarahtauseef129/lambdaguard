@@ -5,7 +5,7 @@ Description: LambdaGuard Scenario B - vulnerable package in a shared layer
 Globals:
   Function:
     Timeout: 10
-    Runtime: python3.11
+    Runtime: python3.14
     MemorySize: 128
     Tags:
       Project: lambdaguard
@@ -18,10 +18,10 @@ Resources:
       Description: Shared helper libraries
       ContentUri: layer/
       CompatibleRuntimes:
-        - python3.11
+        - python3.14
       RetentionPolicy: Delete
     Metadata:
-      BuildMethod: python3.11
+      BuildMethod: python3.14
 
   ScenarioBRole:
     Type: AWS::IAM::Role

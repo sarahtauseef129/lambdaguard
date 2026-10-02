@@ -5,7 +5,7 @@ Description: LambdaGuard Scenario C - private function with an over-permissive r
 Globals:
   Function:
     Timeout: 10
-    Runtime: python3.11
+    Runtime: python3.14
     MemorySize: 128
     Tags:
       Project: lambdaguard
