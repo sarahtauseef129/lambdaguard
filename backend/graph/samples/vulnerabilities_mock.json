@@ -1,0 +1,62 @@
+[
+  {
+    "scenario": "scenario_c",
+    "component_type": "function",
+    "component_name": "scenario-c-func",
+    "package": "idna",
+    "version": "2.7",
+    "cve_id": "MOCK-0001",
+    "cvss": 7.5,
+    "epss": 0.1,
+    "summary": "MOCK DATA for offline testing - not a real vulnerability",
+    "fixed_version": null
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "idna",
+    "version": "2.7",
+    "cve_id": "MOCK-0001",
+    "cvss": 7.5,
+    "epss": 0.1,
+    "summary": "MOCK DATA for offline testing - not a real vulnerability",
+    "fixed_version": null
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "requests",
+    "version": "2.19.0",
+    "cve_id": "MOCK-0002",
+    "cvss": 7.5,
+    "epss": 0.1,
+    "summary": "MOCK DATA for offline testing - not a real vulnerability",
+    "fixed_version": null
+  },
+  {
+    "scenario": "scenario_a",
+    "component_type": "function",
+    "component_name": "scenario-a-func",
+    "package": "urllib3",
+    "version": "1.23",
+    "cve_id": "MOCK-0003",
+    "cvss": 7.5,
+    "epss": 0.1,
+    "summary": "MOCK DATA for offline testing - not a real vulnerability",
+    "fixed_version": null
+  },
+  {
+    "scenario": "scenario_b",
+    "component_type": "layer",
+    "component_name": "common-utils-layer",
+    "package": "urllib3",
+    "version": "1.24.1",
+    "cve_id": "MOCK-0004",
+    "cvss": 7.5,
+    "epss": 0.1,
+    "summary": "MOCK DATA for offline testing - not a real vulnerability",
+    "fixed_version": null
+  }
+]
