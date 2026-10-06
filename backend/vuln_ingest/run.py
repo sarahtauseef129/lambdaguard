@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 
 from .epss import fetch_epss
+from .nvd import fetch_nvd_scores
 from .osv_client import CACHE_FILE, _load_cache, _save_cache, query_osv, simplify
 
 DEFAULT_IN = Path("backend/discovery/output/dependencies.json")
@@ -31,12 +32,22 @@ def build_vulnerabilities(dependencies, ecosystem="PyPI", offline=False, use_eps
                 "version": dep["version"],
                 "cve_id": info["cve_id"],
                 "cvss": info["cvss"],
+                "cvss_source": info["cvss_source"],
                 "epss": None,
                 "summary": info["summary"],
                 "fixed_version": info["fixed_version"],
             })
     if not offline:
         _save_cache(cache)
+
+    # Fill missing CVSS scores from NVD (OSV sometimes only has a v4 vector or nothing).
+    missing = [r for r in rows if r["cvss"] is None]
+    if missing:
+        nvd = fetch_nvd_scores([r["cve_id"] for r in missing], offline=offline)
+        for r in missing:
+            if nvd.get(r["cve_id"]) is not None:
+                r["cvss"] = nvd[r["cve_id"]]
+                r["cvss_source"] = "nvd"
 
     if use_epss:
         scores = fetch_epss([r["cve_id"] for r in rows], offline=offline)
@@ -59,8 +70,10 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(rows, indent=2), encoding="utf-8")
 
+    still_missing = sum(r["cvss"] is None for r in rows)
     pkgs = {(d["package"], d["version"]) for d in deps}
     print(f"{len(deps)} dependency entries ({len(pkgs)} unique packages) -> {len(rows)} vulnerability rows")
+    print(f"Rows still without a CVSS score: {still_missing}")
     print(f"Wrote {args.output}")
 
 

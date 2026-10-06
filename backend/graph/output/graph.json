@@ -176,7 +176,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2023-32681",
-      "cvss": null,
+      "cvss": 6.1,
       "epss": 0.02974,
       "summary": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `re",
       "id": "vuln:CVE-2023-32681"
@@ -184,7 +184,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2018-18074",
-      "cvss": null,
+      "cvss": 7.5,
       "epss": 0.07443,
       "summary": "The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to dis",
       "id": "vuln:CVE-2018-18074"
@@ -192,7 +192,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2025-66471",
-      "cvss": null,
+      "cvss": 7.5,
       "epss": 0.00682,
       "summary": "urllib3 streaming API improperly handles highly compressed data",
       "id": "vuln:CVE-2025-66471"
@@ -232,7 +232,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2019-11324",
-      "cvss": null,
+      "cvss": 7.5,
       "epss": 0.02836,
       "summary": "The urllib3 library before 1.24.2 for Python mishandles certain cases where the desired set of CA certificates is different from the OS store of CA certificates, which results in SSL connections succe",
       "id": "vuln:CVE-2019-11324"
@@ -256,7 +256,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2019-11236",
-      "cvss": null,
+      "cvss": 6.1,
       "epss": 0.02073,
       "summary": "In the urllib3 library through 1.24.1 for Python, CRLF injection is possible if the attacker controls the request parameter.",
       "id": "vuln:CVE-2019-11236"
@@ -272,7 +272,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2026-97689",
-      "cvss": null,
+      "cvss": 8.9,
       "epss": 0.00292,
       "summary": "urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory",
       "id": "vuln:CVE-2026-97689"
@@ -280,7 +280,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2020-26137",
-      "cvss": null,
+      "cvss": 6.5,
       "epss": 0.02269,
       "summary": "urllib3 before 1.25.9 allows CRLF injection if the attacker controls the HTTP request method, as demonstrated by inserting CR and LF control characters in the first argument of putrequest(). NOTE: thi",
       "id": "vuln:CVE-2020-26137"
@@ -288,7 +288,7 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2025-66418",
-      "cvss": null,
+      "cvss": 7.5,
       "epss": 0.00682,
       "summary": "urllib3 allows an unbounded number of links in the decompression chain",
       "id": "vuln:CVE-2025-66418"

@@ -63,16 +63,20 @@ def extract_cve_id(vuln):
 
 
 def extract_cvss(vuln):
-    """Best-effort CVSS base score (0-10) for one OSV record, or None."""
+    """Best-effort CVSS base score for one OSV record. Returns (score, source).
+
+    source is "osv_v3" (computed from a real v3 vector), "osv_label" (rough value
+    from a LOW/MODERATE/HIGH/CRITICAL label) or None when OSV has nothing usable.
+    """
     for sev in vuln.get("severity", []):
         if sev.get("type") == "CVSS_V3":
             score = cvss3_base_score(sev.get("score", ""))
             if score is not None:
-                return score
+                return score, "osv_v3"
     label = (vuln.get("database_specific") or {}).get("severity")
-    if label:
-        return _LABEL_TO_SCORE.get(str(label).upper())
-    return None
+    if label and str(label).upper() in _LABEL_TO_SCORE:
+        return _LABEL_TO_SCORE[str(label).upper()], "osv_label"
+    return None, None
 
 
 def extract_fixed_version(vuln):
@@ -86,10 +90,12 @@ def extract_fixed_version(vuln):
 
 def simplify(vuln):
     """Reduce one raw OSV record to the fields we care about."""
+    cvss, source = extract_cvss(vuln)
     return {
         "cve_id": extract_cve_id(vuln),
         "osv_id": vuln.get("id"),
-        "cvss": extract_cvss(vuln),
+        "cvss": cvss,
+        "cvss_source": source,
         "summary": vuln.get("summary") or (vuln.get("details", "")[:200]),
         "fixed_version": extract_fixed_version(vuln),
     }
