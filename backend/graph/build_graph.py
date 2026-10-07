@@ -93,7 +93,7 @@ def build_graph(discovery, dependencies, vulnerabilities):
     # --- vulnerabilities -------------------------------------------------------
     for v in vulnerabilities:
         vid = f"vuln:{v['cve_id']}"
-        G.add_node(vid, type="vulnerability", cve_id=v["cve_id"], cvss=v.get("cvss"),
+        G.add_node(vid, type="vulnerability", cve_id=v["cve_id"], cvss=v.get("cvss"), cvss_version=v.get("cvss_version"),
                    epss=v.get("epss"), summary=v.get("summary"))
         pid = f"pkg:{v['package']}=={v['version']}"
         if pid not in G:

@@ -14,10 +14,12 @@ from pathlib import Path
 import requests
 
 NVD_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
-NVD_CACHE_FILE = Path(__file__).parent / "output" / "nvd_cache.json"
+NVD_CACHE_FILE = Path(__file__).parent / "output" / "nvd_cache_v2.json"  # v2: stores score + version
 
 # Prefer v3.1, then v3.0 (same family the baselines usually use), then v4.0, then v2.
 _METRIC_ORDER = ["cvssMetricV31", "cvssMetricV30", "cvssMetricV40", "cvssMetricV2"]
+_METRIC_VERSION = {"cvssMetricV31": "3.1", "cvssMetricV30": "3.0",
+                   "cvssMetricV40": "4.0", "cvssMetricV2": "2.0"}
 
 
 def _load_cache():
@@ -32,7 +34,7 @@ def _save_cache(cache):
 
 
 def parse_nvd_score(payload):
-    """Pull the best base score out of one NVD API response. Returns float or None."""
+    """Best base score in one NVD API response, as {"score": float, "version": "3.1"} or None."""
     try:
         metrics = payload["vulnerabilities"][0]["cve"].get("metrics", {})
     except (KeyError, IndexError, TypeError):
@@ -44,12 +46,12 @@ def parse_nvd_score(payload):
         for e in entries:
             score = (e.get("cvssData") or {}).get("baseScore")
             if score is not None:
-                return float(score)
+                return {"score": float(score), "version": _METRIC_VERSION[name]}
     return None
 
 
 def fetch_nvd_scores(cve_ids, offline=False):
-    """Return {cve_id: score_or_None} for CVE ids. Non-CVE ids are skipped."""
+    """Return {cve_id: {"score", "version"} or None} for CVE ids. Non-CVE ids are skipped."""
     ids = sorted({c for c in cve_ids if c.startswith("CVE-")})
     cache = _load_cache()
     out = {c: cache[c] for c in ids if c in cache}
@@ -65,9 +67,9 @@ def fetch_nvd_scores(cve_ids, offline=False):
         try:
             resp = requests.get(NVD_URL, params={"cveId": cve}, headers=headers, timeout=30)
             resp.raise_for_status()
-            score = parse_nvd_score(resp.json())
-            cache[cve] = score          # cache misses too (None) so we don't re-ask
-            out[cve] = score
+            result = parse_nvd_score(resp.json())
+            cache[cve] = result         # cache misses too (None) so we don't re-ask
+            out[cve] = result
         except (requests.RequestException, ValueError) as exc:
             print(f"  [warn] NVD lookup failed for {cve}: {exc}")  # not cached: retry next run
         time.sleep(delay)

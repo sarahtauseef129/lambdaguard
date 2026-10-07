@@ -62,40 +62,74 @@ def extract_cve_id(vuln):
     return vuln.get("id", "UNKNOWN")
 
 
+def _vector_version(vector):
+    """'CVSS:3.1/AV:N/...' -> '3.1'. Falls back to '3.x' if the prefix is missing."""
+    head = (vector or "").split("/")[0]
+    return head.split(":")[1] if head.startswith("CVSS:") and ":" in head else "3.x"
+
+
 def extract_cvss(vuln):
-    """Best-effort CVSS base score for one OSV record. Returns (score, source).
+    """Best-effort CVSS base score for one OSV record. Returns (score, source, version).
 
     source is "osv_v3" (computed from a real v3 vector), "osv_label" (rough value
     from a LOW/MODERATE/HIGH/CRITICAL label) or None when OSV has nothing usable.
+    version is "3.1"/"3.0" for a vector, None for a label.
     """
     for sev in vuln.get("severity", []):
         if sev.get("type") == "CVSS_V3":
-            score = cvss3_base_score(sev.get("score", ""))
+            vector = sev.get("score", "")
+            score = cvss3_base_score(vector)
             if score is not None:
-                return score, "osv_v3"
+                return score, "osv_v3", _vector_version(vector)
     label = (vuln.get("database_specific") or {}).get("severity")
     if label and str(label).upper() in _LABEL_TO_SCORE:
-        return _LABEL_TO_SCORE[str(label).upper()], "osv_label"
-    return None, None
+        return _LABEL_TO_SCORE[str(label).upper()], "osv_label", None
+    return None, None, None
 
 
-def extract_fixed_version(vuln):
+def _version_key(v):
+    """Sortable version. Uses 'packaging' if installed, else None (caller falls back)."""
+    try:
+        from packaging.version import Version
+        return Version(v)
+    except Exception:
+        return None
+
+
+def extract_fixed_version(vuln, installed_version=None):
+    """Fixed version that applies to the installed version.
+
+    - Ignores GIT ranges (those 'fixed' values are commit hashes, not versions).
+    - If several branches have a fix (e.g. 1.26.19 and 2.2.2), picks the smallest
+      fixed version that is newer than the installed one.
+    """
+    fixed = []
     for aff in vuln.get("affected", []):
         for rng in aff.get("ranges", []):
+            if rng.get("type") == "GIT":
+                continue
             for ev in rng.get("events", []):
                 if "fixed" in ev:
-                    return ev["fixed"]
-    return None
+                    fixed.append(ev["fixed"])
+    if not fixed:
+        return None
+    inst = _version_key(installed_version) if installed_version else None
+    if inst is not None:
+        newer = [(k, f) for f in fixed if (k := _version_key(f)) is not None and k > inst]
+        if newer:
+            return min(newer, key=lambda t: t[0])[1]
+    return fixed[0]
 
 
-def simplify(vuln):
+def simplify(vuln, installed_version=None):
     """Reduce one raw OSV record to the fields we care about."""
-    cvss, source = extract_cvss(vuln)
+    cvss, source, cvss_version = extract_cvss(vuln)
     return {
         "cve_id": extract_cve_id(vuln),
         "osv_id": vuln.get("id"),
         "cvss": cvss,
         "cvss_source": source,
+        "cvss_version": cvss_version,
         "summary": vuln.get("summary") or (vuln.get("details", "")[:200]),
-        "fixed_version": extract_fixed_version(vuln),
+        "fixed_version": extract_fixed_version(vuln, installed_version),
     }

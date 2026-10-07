@@ -17,37 +17,78 @@ DEFAULT_IN = Path("backend/discovery/output/dependencies.json")
 DEFAULT_OUT = Path("backend/vuln_ingest/output/vulnerabilities.json")
 
 
+_SOURCE_PRIORITY = {"nvd": 3, "osv_v3": 2, "osv_label": 1}
+
+
+def _version_rank(version):
+    """Prefer CVSS v3.x (comparable across CVEs) over v4.0, then v2.0 / unknown."""
+    if version and version.startswith("3"):
+        return 2
+    if version == "4.0":
+        return 1
+    return 0
+
+
+def _canonical_scores(rows, candidates, offline):
+    """One (score, source, version) per CVE id, so the same CVE never has two scores.
+
+    Order of preference: CVSS v3.x > v4.0 > other; then NVD > OSV vector > OSV label;
+    then the higher score (conservative).
+    candidates: {cve_id: [(score, source, version), ...]} collected from every OSV record.
+    """
+    nvd = fetch_nvd_scores(sorted({r["cve_id"] for r in rows}), offline=offline)
+    canon = {}
+    for cve in {r["cve_id"] for r in rows}:
+        options = list(candidates.get(cve, []))
+        hit = nvd.get(cve)
+        if hit:
+            options.append((hit["score"], "nvd", hit["version"]))
+        if options:
+            canon[cve] = max(options, key=lambda o: (_version_rank(o[2]),
+                                                     _SOURCE_PRIORITY.get(o[1], 0), o[0]))
+    return canon
+
+
 def build_vulnerabilities(dependencies, ecosystem="PyPI", offline=False, use_epss=True):
     cache = _load_cache()
-    rows = []
+    merged = {}       # one row per (component, package, version, cve)
+    candidates = {}   # cve_id -> [(score, source)]
     for dep in dependencies:
         raw = query_osv(dep["package"], dep["version"], ecosystem, cache=cache, offline=offline)
         for vuln in raw:
-            info = simplify(vuln)
-            rows.append({
+            info = simplify(vuln, installed_version=dep["version"])
+            key = (dep["scenario"], dep["component_type"], dep["component_name"],
+                   dep["package"], dep["version"], info["cve_id"])
+            if info["cvss"] is not None:
+                candidates.setdefault(info["cve_id"], []).append(
+                    (info["cvss"], info["cvss_source"], info["cvss_version"]))
+            if key in merged:  # same CVE reported by another OSV record (GHSA + PYSEC ...)
+                row = merged[key]
+                row["summary"] = row["summary"] or info["summary"]
+                row["fixed_version"] = row["fixed_version"] or info["fixed_version"]
+                continue
+            merged[key] = {
                 "scenario": dep["scenario"],
                 "component_type": dep["component_type"],
                 "component_name": dep["component_name"],
                 "package": dep["package"],
                 "version": dep["version"],
                 "cve_id": info["cve_id"],
-                "cvss": info["cvss"],
-                "cvss_source": info["cvss_source"],
+                "cvss": None,
+                "cvss_source": None,
+                "cvss_version": None,
                 "epss": None,
                 "summary": info["summary"],
                 "fixed_version": info["fixed_version"],
-            })
+            }
+    rows = list(merged.values())
     if not offline:
         _save_cache(cache)
 
-    # Fill missing CVSS scores from NVD (OSV sometimes only has a v4 vector or nothing).
-    missing = [r for r in rows if r["cvss"] is None]
-    if missing:
-        nvd = fetch_nvd_scores([r["cve_id"] for r in missing], offline=offline)
-        for r in missing:
-            if nvd.get(r["cve_id"]) is not None:
-                r["cvss"] = nvd[r["cve_id"]]
-                r["cvss_source"] = "nvd"
+    canon = _canonical_scores(rows, candidates, offline)
+    for r in rows:
+        if r["cve_id"] in canon:
+            r["cvss"], r["cvss_source"], r["cvss_version"] = canon[r["cve_id"]]
 
     if use_epss:
         scores = fetch_epss([r["cve_id"] for r in rows], offline=offline)

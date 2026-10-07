@@ -137,22 +137,25 @@
       "type": "vulnerability",
       "cve_id": "CVE-2026-45409",
       "cvss": 5.3,
+      "cvss_version": "3.1",
       "epss": 0.00457,
-      "summary": "Internationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior",
+      "summary": "Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix",
       "id": "vuln:CVE-2026-45409"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2024-3651",
       "cvss": 7.5,
+      "cvss_version": "3.1",
       "epss": 0.01386,
-      "summary": "A vulnerability was identified in the kjd/idna library, specifically within the `idna.encode()` function, affecting version 3.6. The issue arises from the function's handling of crafted input strings,",
+      "summary": "Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode",
       "id": "vuln:CVE-2024-3651"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2024-47081",
       "cvss": 5.3,
+      "cvss_version": "3.1",
       "epss": 0.0098,
       "summary": "Requests vulnerable to .netrc credentials leak via malicious URLs",
       "id": "vuln:CVE-2024-47081"
@@ -161,6 +164,7 @@
       "type": "vulnerability",
       "cve_id": "CVE-2024-35195",
       "cvss": 5.6,
+      "cvss_version": "3.1",
       "epss": 0.0034,
       "summary": "Requests `Session` object does not verify requests after making first request with verify=False",
       "id": "vuln:CVE-2024-35195"
@@ -169,30 +173,34 @@
       "type": "vulnerability",
       "cve_id": "CVE-2026-25645",
       "cvss": 5.5,
+      "cvss_version": "3.1",
       "epss": 0.00185,
-      "summary": "Requests is a HTTP library. Prior to version 2.33.0, the `requests.utils.extract_zipped_paths()` utility function uses a predictable filename when extracting files from zip archives into the system te",
+      "summary": "Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function",
       "id": "vuln:CVE-2026-25645"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2023-32681",
       "cvss": 6.1,
+      "cvss_version": "3.1",
       "epss": 0.02974,
-      "summary": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `re",
+      "summary": "Unintended leak of Proxy-Authorization header in requests",
       "id": "vuln:CVE-2023-32681"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2018-18074",
       "cvss": 7.5,
+      "cvss_version": "3.1",
       "epss": 0.07443,
-      "summary": "The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to dis",
+      "summary": "Insufficiently Protected Credentials in Requests",
       "id": "vuln:CVE-2018-18074"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2025-66471",
       "cvss": 7.5,
+      "cvss_version": "3.1",
       "epss": 0.00682,
       "summary": "urllib3 streaming API improperly handles highly compressed data",
       "id": "vuln:CVE-2025-66471"
@@ -200,7 +208,8 @@
     {
       "type": "vulnerability",
       "cve_id": "CVE-2024-37891",
-      "cvss": 4.4,
+      "cvss": 6.5,
+      "cvss_version": "3.1",
       "epss": 0.01141,
       "summary": "urllib3's Proxy-Authorization request header isn't stripped during cross-origin redirects",
       "id": "vuln:CVE-2024-37891"
@@ -209,6 +218,7 @@
       "type": "vulnerability",
       "cve_id": "CVE-2026-21441",
       "cvss": 7.5,
+      "cvss_version": "3.1",
       "epss": 0.02922,
       "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
       "id": "vuln:CVE-2026-21441"
@@ -217,30 +227,34 @@
       "type": "vulnerability",
       "cve_id": "CVE-2023-45803",
       "cvss": 4.2,
+      "cvss_version": "3.1",
       "epss": 0.00544,
-      "summary": "urllib3 is a user-friendly HTTP client library for Python. urllib3 previously wouldn't remove the HTTP request body when an HTTP redirect response using status 301, 302, or 303 after the request had i",
+      "summary": "urllib3's request body not stripped after redirect from 303 status changes request method to GET",
       "id": "vuln:CVE-2023-45803"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2018-25091",
       "cvss": 6.1,
+      "cvss_version": "3.1",
       "epss": 0.00516,
-      "summary": "urllib3 before 1.24.2 does not remove the authorization HTTP header when following a cross-origin redirect (i.e., a redirect that differs in host, port, or scheme). This can allow for credentials in t",
+      "summary": "Authorization Header forwarded on redirect",
       "id": "vuln:CVE-2018-25091"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2019-11324",
       "cvss": 7.5,
+      "cvss_version": "3.0",
       "epss": 0.02836,
-      "summary": "The urllib3 library before 1.24.2 for Python mishandles certain cases where the desired set of CA certificates is different from the OS store of CA certificates, which results in SSL connections succe",
+      "summary": "Improper Certificate Validation in urllib3",
       "id": "vuln:CVE-2019-11324"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2025-50181",
-      "cvss": 5.3,
+      "cvss": 6.1,
+      "cvss_version": "3.1",
       "epss": 0.00474,
       "summary": "urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation",
       "id": "vuln:CVE-2025-50181"
@@ -249,30 +263,34 @@
       "type": "vulnerability",
       "cve_id": "CVE-2026-44431",
       "cvss": 5.3,
+      "cvss_version": "3.1",
       "epss": 0.00339,
-      "summary": "urllib3 is an HTTP client library for Python. From 1.23 to before 2.7.0, cross-origin redirects followed from the low-level API via ProxyManager.connection_from_url().urlopen(..., assert_same_host=Fal",
+      "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
       "id": "vuln:CVE-2026-44431"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2019-11236",
       "cvss": 6.1,
+      "cvss_version": "3.0",
       "epss": 0.02073,
-      "summary": "In the urllib3 library through 1.24.1 for Python, CRLF injection is possible if the attacker controls the request parameter.",
+      "summary": "Improper Neutralization of CRLF Sequences in urllib3 library for Python",
       "id": "vuln:CVE-2019-11236"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2023-43804",
       "cvss": 8.1,
+      "cvss_version": "3.1",
       "epss": 0.0136,
-      "summary": "urllib3 is a user-friendly HTTP client library for Python. urllib3 doesn't treat the `Cookie` HTTP header special or provide any helpers for managing cookies over HTTP, that is the responsibility of t",
+      "summary": "`Cookie` HTTP header isn't stripped on cross-origin redirects",
       "id": "vuln:CVE-2023-43804"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2026-97689",
       "cvss": 8.9,
+      "cvss_version": "4.0",
       "epss": 0.00292,
       "summary": "urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory",
       "id": "vuln:CVE-2026-97689"
@@ -281,14 +299,16 @@
       "type": "vulnerability",
       "cve_id": "CVE-2020-26137",
       "cvss": 6.5,
+      "cvss_version": "3.1",
       "epss": 0.02269,
-      "summary": "urllib3 before 1.25.9 allows CRLF injection if the attacker controls the HTTP request method, as demonstrated by inserting CR and LF control characters in the first argument of putrequest(). NOTE: thi",
+      "summary": "CRLF injection in urllib3",
       "id": "vuln:CVE-2020-26137"
     },
     {
       "type": "vulnerability",
       "cve_id": "CVE-2025-66418",
       "cvss": 7.5,
+      "cvss_version": "3.1",
       "epss": 0.00682,
       "summary": "urllib3 allows an unbounded number of links in the decompression chain",
       "id": "vuln:CVE-2025-66418"
