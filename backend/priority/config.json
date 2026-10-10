@@ -1,0 +1,18 @@
+{
+  "_comment": "Weights are normalised to sum to 1, so you can edit them freely. All scores are on a 0-100 scale.",
+  "arch_weights": {
+    "cvss": 0.35,
+    "epss": 0.10,
+    "is_public": 0.15,
+    "num_affected_functions": 0.10,
+    "layer_shared": 0.05,
+    "iam_privilege": 0.15,
+    "resource_sensitivity": 0.10
+  },
+  "cvss_epss_weights": {
+    "cvss": 0.70,
+    "epss": 0.30
+  },
+  "epss_cap": 0.1,
+  "sensitive_resource_patterns": ["sensitive", "secret", "users", "customer", "payment", "pii"]
+}

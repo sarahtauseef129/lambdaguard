@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LambdaGuard</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1c2430;--mut:#667085;--line:#e3e6ea;--acc:#2f5fd0;--red:#c0392b;--grn:#1e8e5a;--amb:#b7791f}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:0 24px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+header b{font-size:17px;padding:14px 0}nav a{color:#c9d1dc;text-decoration:none;padding:16px 4px;display:inline-block;margin-right:14px;border-bottom:3px solid transparent}
+nav a.on{color:#fff;border-color:#6d97ff}main{max-width:1150px;margin:24px auto;padding:0 20px}
+h2{margin:0 0 4px}p.sub{color:var(--mut);margin:0 0 18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card .n{font-size:28px;font-weight:700}.card .l{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#eef1f5;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);cursor:pointer;white-space:nowrap}
+tr.row{cursor:pointer}tr.row:hover{background:#f3f6fb}tr.det td{background:#fafbfd;color:#394150}
+.tw{overflow-x:auto}.bar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+input,select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:600;margin:0 4px 4px 0;background:#eef1f5;color:#394150}
+.pub{background:#fde8e6;color:var(--red)}.prv{background:#e3f5ec;color:var(--grn)}.hi{background:#fdf0d9;color:var(--amb)}
+.up{color:var(--grn);font-weight:600}.dn{color:var(--red);font-weight:600}.mut{color:var(--mut)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+button{padding:7px 14px;border:0;border-radius:8px;background:var(--acc);color:#fff;font:inherit;cursor:pointer}
+.path{font:12px ui-monospace,Consolas,monospace;padding:4px 0}h3{margin:20px 0 8px}
+code{background:#eef1f5;padding:1px 5px;border-radius:4px}.err{background:#fde8e6;color:var(--red);padding:12px;border-radius:8px}
+</style></head><body>
+<header><b>🛡 LambdaGuard</b>
+<nav><a href="#overview">Overview</a><a href="#architecture">Architecture</a><a href="#vulns">Vulnerabilities</a><a href="#trace">Trace</a><a href="#compare">Comparison</a></nav></header>
+<main id="app">Loading…</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+const $=s=>document.querySelector(s), app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const get=async p=>{const r=await fetch(p);if(!r.ok)throw new Error(p+' → '+r.status);return r.json()};
+const nm=x=>typeof x==='string'?x.split(/[:/]/).filter(Boolean).slice(-1)[0]:(x.name||x.arn||JSON.stringify(x));
+const METHODS={cvss:'CVSS only',cvss_epss:'CVSS + EPSS',arch:'Architecture-aware'};
+const shift=n=>n>0?`<span class="up">▲ ${n}</span>`:n<0?`<span class="dn">▼ ${-n}</span>`:'<span class="mut">–</span>';
+const short=i=>`${i.cve_id} @ ${i.component_name}`;
+let charts=[];
+
+
+const TC={vulnerability:'#d6453d',package:'#e8a33a',layer:'#8e4ec6',trigger:'#12a594',function:'#2f5fd0',iam_role:'#6b7a90',resource:'#2b9348'};
+const TN={vulnerability:'Vulnerability',package:'Package',layer:'Layer',trigger:'Trigger',function:'Function',iam_role:'IAM role',resource:'Resource'};
+const COL={vulnerability:0,package:1,layer:2,trigger:2,function:3,iam_role:4,resource:5};
+function shape(t,w,h,st='#fff',sw=1.5){const a=w/2,b=h/2,f=`fill="${TC[t]}" stroke="${st}" stroke-width="${sw}"`;
+  if(t==='vulnerability')return `<polygon points="${-a},0 0,${-b} ${a},0 0,${b}" ${f}/>`;
+  if(t==='layer')return `<polygon points="${-a+10},${-b} ${a-10},${-b} ${a},0 ${a-10},${b} ${-a+10},${b} ${-a},0" ${f}/>`;
+  if(t==='trigger')return `<polygon points="${-a},${-b} ${a-12},${-b} ${a},0 ${a-12},${b} ${-a},${b}" ${f}/>`;
+  if(t==='function')return `<rect x="${-a}" y="${-b}" width="${w}" height="${h}" rx="${b}" ${f}/>`;
+  if(t==='iam_role')return `<ellipse rx="${a}" ry="${b}" ${f}/>`;
+  if(t==='resource')return `<path d="M${-a},${-b+6} a${a},6 0 0 1 ${w},0 v${h-12} a${a},6 0 0 1 ${-w},0z" ${f}/>`;
+  return `<rect x="${-a}" y="${-b}" width="${w}" height="${h}" rx="3" ${f}/>`}
+function drawGraph(nodes,edges){
+  const W=158,H=44,GX=60,GY=22,cols=[[],[],[],[],[],[]],pos={},nb={};
+  nodes.forEach(n=>cols[COL[n.type]??1].push(n));
+  edges.forEach(e=>{(nb[e.source]??=[]).push(e.target);(nb[e.target]??=[]).push(e.source)});
+  const used=cols.filter(c=>c.length),Hs=Math.max(...used.map(c=>c.length))*(H+GY)+30,Wt=used.length*(W+GX)-GX+40;
+  used.forEach((c,k)=>{c.forEach(n=>{const ys=(nb[n.id]||[]).map(i=>pos[i]?.y).filter(y=>y!==undefined);n._b=ys.length?ys.reduce((x,y)=>x+y)/ys.length:1e9});
+    c.sort((a,b)=>a._b-b._b||a.label.localeCompare(b.label));
+    c.forEach((n,i)=>pos[n.id]={x:20+k*(W+GX)+W/2,y:(Hs-c.length*(H+GY)+GY)/2+i*(H+GY)+H/2})});
+  const ed=edges.map(e=>{const [s,t]=e.relation==='triggered_by'?[e.target,e.source]:[e.source,e.target],p=pos[s],q=pos[t];if(!p||!q)return'';
+    const x1=p.x+W/2,x2=q.x-W/2,m=(x2-x1)/2;
+    return `<path class="e" data-s="${esc(e.source)}" data-t="${esc(e.target)}" d="M${x1},${p.y} C${x1+m},${p.y} ${x2-m},${q.y} ${x2},${q.y}" fill="none" stroke="#9aa5b5" stroke-width="1.5" ${e.relation==='can_access'?'stroke-dasharray="5 4"':''} marker-end="url(#ar)"><title>${esc(e.relation+(e.actions?': '+e.actions.join(', '):''))}</title></path>`}).join('');
+  const nd=nodes.map(n=>{const p=pos[n.id],pub=n.type==='trigger'&&n.public,l=n.label.length>24?n.label.slice(0,23)+'…':n.label;
+    return `<g class="n" data-id="${esc(n.id)}" transform="translate(${p.x},${p.y})"><title>${esc(TN[n.type]+': '+n.label+(n.arn?'\n'+n.arn:'')+(n.cvss!=null?'\nCVSS '+n.cvss:''))}</title>${shape(n.type,W,H,pub?'#e5484d':'#fff',pub?4:1.5)}
+      <text text-anchor="middle" dy="4" font-size="12" fill="${n.type==='package'?'#2a1f00':'#fff'}">${esc(l)}</text>
+      ${pub?`<g transform="translate(${W/2-64},${-H/2-11})"><rect width="64" height="16" rx="8" fill="#e5484d"/><text x="32" y="12" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">🌐 PUBLIC</text></g>`:''}</g>`}).join('');
+  const lg=Object.keys(TC).map((t,i)=>`<g transform="translate(${i*128+50},18)">${shape(t,40,22)}<text x="28" y="4" font-size="12" fill="#394150">${TN[t]}</text></g>`).join('');
+  return `<svg class="gr" viewBox="0 0 ${Wt} ${Hs}" style="width:100%;max-width:${Wt}px;height:auto"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#7b8794"/></marker></defs>${ed}${nd}</svg>
+  <svg viewBox="0 0 960 36" style="width:100%;max-width:960px;margin-top:8px"><rect x="0" y="6" width="960" height="26" fill="none"/>${lg}</svg>
+  <div class="mut" style="font-size:12px">Red outline + 🌐 PUBLIC = publicly reachable trigger. Dashed line = IAM access. Hover a node to highlight its own connections.</div>`}
+document.addEventListener('mouseover',e=>{const svg=e.target.closest?.('svg.gr');if(!svg)return;const g=e.target.closest('g.n'),id=g?.dataset.id;
+  svg.querySelectorAll('path.e').forEach(p=>{const on=!!g&&(p.dataset.s===id||p.dataset.t===id);p.style.opacity=!g||on?1:.08;p.style.stroke=on?'#2f5fd0':'';p.style.strokeWidth=on?2.5:''})});
+const IAM={0:'none',1:'read-only',2:'write-capable',3:'wildcard'};
+const traceHtml=r=>`<div class="box"><b>${esc(r.cve_id)}</b> <span class="tag">CVSS ${r.cvss??'–'}${r.cvss_version?' v'+esc(r.cvss_version):''}</span><span class="tag">EPSS ${r.epss??'–'}</span><span class="tag">Fix: ${esc(r.fixed_version||'n/a')}</span><div>${esc(r.summary)}</div></div>
+  <h3>Affected packages</h3><div class="tw"><table><thead><tr><th>Package</th><th>Installed in</th><th>Scenario</th><th>Arch rank</th><th>CVSS rank</th></tr></thead><tbody>${r.findings.map(f=>`<tr><td>${esc(f.package)} ${esc(f.version)}</td><td>${esc(f.component_name)} <span class="mut">(${esc(f.component_type)})</span></td><td>${esc(f.scenario)}</td><td>#${f.ranks.arch}</td><td>#${f.ranks.cvss}</td></tr>`).join('')}</tbody></table></div>
+  <h3>Affected functions</h3><div class="tw"><table><thead><tr><th>Function</th><th>Exposure</th><th>IAM privilege</th><th>Triggers</th><th>Resources it can reach</th></tr></thead><tbody>${r.functions.map(f=>`<tr><td><b>${esc(f.name)}</b><div class="mut">via ${f.via.map(esc).join(', ')}</div></td><td><span class="tag ${f.is_public?'pub':'prv'}">${f.is_public?'PUBLIC':'PRIVATE'}</span></td>
+    <td><span class="tag ${f.iam_level>=3?'hi':''}">${f.iam_level} · ${IAM[f.iam_level]}</span></td><td>${f.triggers.map(t=>`<span class="tag ${t.public?'pub':''}">${esc(t.type)}</span>`).join('')||'–'}</td>
+    <td>${f.resources.map(x=>`<span class="tag ${x.sensitive?'hi':''}" title="${esc(x.arn)}">${esc(x.label)} (${x.actions.map(esc).join(', ')})</span>`).join('')||'<span class="mut">none</span>'}</td></tr>`).join('')}</tbody></table></div>
+  <h3>Propagation paths</h3><div class="box">${r.paths.map(p=>`<div class="path">${p.labels.map(esc).join(' → ')}</div>`).join('')}</div>
+  <h3>Graph</h3><div class="box tw">${drawGraph(r.graph.nodes,r.graph.edges)}</div>`;
+
+const pages={
+async overview(){
+  const s=await get('/summary');
+  const c=[['Functions',s.functions],['Layers',s.layers],['Public functions',s.public_functions],['Findings',s.findings],['Unique CVEs',s.unique_cves],['Promoted by arch',s.promoted],['Demoted by arch',s.demoted]];
+  return `<h2>Overview</h2><p class="sub">Architecture-aware vulnerability prioritisation for AWS Lambda.</p>
+  <div class="cards">${c.map(([l,n])=>`<div class="card"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('')}</div>
+  <div class="box"><b>What this shows.</b> Every CVE in a function's dependencies (or in a shared layer) is a <i>finding</i>. Three methods rank them:
+  <ul><li><b>CVSS only</b> – the severity score on its own.</li><li><b>CVSS + EPSS</b> – severity plus the likelihood of exploitation.</li>
+  <li><b>Architecture-aware</b> – adds deployment context: public trigger, number of affected functions, shared layer, IAM privilege, and sensitive resources reachable.</li></ul>
+  Findings per scenario: ${Object.entries(s.by_scenario).map(([k,v])=>`<span class="tag">${esc(k)}: ${v}</span>`).join('')}</div>
+  <div class="box mut">Weights live in <code>backend/priority/config.json</code>. Re-run <code>python -m backend.priority.run</code> and refresh to see changes.</div>`;
+},
+async architecture(){
+  const [fns,lays,vs]=await Promise.all([get('/functions'),get('/layers'),get('/vulnerabilities')]);
+  const mine=n=>vs.filter(v=>v.features.affected_functions.includes(n));
+  const fcard=f=>{const pub=f.triggers.some(t=>t.public),m=mine(f.name),best=m.length?Math.min(...m.map(v=>v.ranks.arch)):null;
+    return `<div class="card"><b>${esc(f.name)}</b> <span class="tag ${pub?'pub':'prv'}">${pub?'PUBLIC':'PRIVATE'}</span><div class="mut">${esc(f.runtime||'')}</div>
+    <p><b>Triggers:</b> ${f.triggers.map(t=>`<span class="tag ${t.public?'pub':''}">${esc(t.type)}</span>`).join('')||'<span class="mut">none</span>'}</p>
+    <p><b>Layers:</b> ${(f.layers||[]).map(l=>`<span class="tag">${esc(nm(l))}</span>`).join('')||'<span class="mut">none</span>'}</p>
+    <p><b>IAM actions:</b> ${(f.iam.allowed_actions||[]).map(a=>`<span class="tag ${a.includes('*')?'hi':''}">${esc(a)}</span>`).join('')||'<span class="mut">basic execution only</span>'}</p>
+    <p><b>Resources:</b> ${(f.resources||[]).map(r=>`<span class="tag">${esc(nm(r))}</span>`).join('')||'<span class="mut">none</span>'}</p>
+    <p><b>Findings:</b> ${m.length}${best?` · best arch rank <b>#${best}</b>`:''}</p></div>`};
+  return `<h2>Architecture</h2><p class="sub">Deployed functions, their triggers, IAM and layers.</p>
+  <h3>Functions</h3><div class="grid">${fns.map(fcard).join('')}</div>
+  <h3>Layers</h3><div class="grid">${lays.map(l=>{const users=fns.filter(f=>(f.layers||[]).some(x=>nm(x).startsWith(l.name)||String(x).includes(l.name)));
+    return `<div class="card"><b>${esc(l.name)}</b><div class="mut">${esc(l.description||'')}</div><p><b>Used by:</b> ${users.map(u=>`<span class="tag">${esc(u.name)}</span>`).join('')||'<span class="mut">none</span>'}</p>
+    <p><b>Findings in layer:</b> ${vs.filter(v=>v.component_name===l.name).length}</p></div>`}).join('')}</div>`;
+},
+async vulns(){
+  const vs=await get('/vulnerabilities'), sc=[...new Set(vs.map(v=>v.scenario))].sort();
+  let key='arch',dir=1,q='',scn='';
+  const cols=[['arch','Arch rank',v=>v.ranks.arch],['cve','CVE',v=>v.cve_id],['pkg','Package',v=>v.package+' '+v.version],['comp','Component',v=>v.component_name],
+    ['cvss','CVSS',v=>v.cvss??-1],['epss','EPSS',v=>v.epss??-1],['score','Arch score',v=>v.scores.arch],['cr','CVSS rank',v=>v.ranks.cvss],['sh','Shift',v=>v.rank_shift_arch_vs_cvss]];
+  const draw=()=>{const f=cols.find(c=>c[0]===key)[2];
+    const rows=vs.filter(v=>(!scn||v.scenario===scn)&&(!q||(v.cve_id+v.package+v.component_name+v.summary).toLowerCase().includes(q)))
+      .sort((a,b)=>{const x=f(a),y=f(b);return (x>y?1:x<y?-1:0)*dir});
+    $('#tb').innerHTML=rows.map((v,i)=>`<tr class="row" data-i="${i}"><td><b>#${v.ranks.arch}</b></td><td>${esc(v.cve_id)}</td><td>${esc(v.package)} ${esc(v.version)}</td><td>${esc(v.component_name)}</td>
+      <td>${v.cvss??'–'} <span class="mut">${v.cvss_version?'v'+esc(v.cvss_version):''}</span></td><td>${v.epss??'–'}</td><td>${v.scores.arch}</td><td>#${v.ranks.cvss}</td><td>${shift(v.rank_shift_arch_vs_cvss)}</td></tr>
+      <tr class="det" hidden><td colspan="9"><b>${esc(v.summary)}</b><br>${esc(v.reason)}<br><a href="#trace/${encodeURIComponent(v.cve_id)}">Trace this CVE →</a><br><span class="mut">Fix: ${esc(v.fixed_version||'n/a')} · score source: ${esc(v.cvss_source)} · affected: ${v.features.affected_functions.map(esc).join(', ')}</span></td></tr>`).join('')||'<tr><td colspan="9" class="mut">No matches.</td></tr>';
+    document.querySelectorAll('tr.row').forEach(r=>r.onclick=()=>r.nextElementSibling.hidden^=1)};
+  setTimeout(()=>{$('#q').oninput=e=>{q=e.target.value.toLowerCase();draw()};$('#sc').onchange=e=>{scn=e.target.value;draw()};
+    document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=key===k?-dir:1;key=k;draw()});draw()});
+  return `<h2>Vulnerabilities</h2><p class="sub">Click a header to sort and a row for details.</p>
+  <div class="bar"><input id="q" placeholder="Search CVE, package, component…" size="32"><select id="sc"><option value="">All scenarios</option>${sc.map(s=>`<option>${esc(s)}</option>`).join('')}</select></div>
+  <div class="tw"><table><thead><tr>${cols.map(c=>`<th data-k="${c[0]}">${c[1]}</th>`).join('')}</tr></thead><tbody id="tb"></tbody></table></div>`;
+},
+async trace(arg){
+  const ids=[...new Set((await get('/vulnerabilities')).map(v=>v.cve_id))].sort();
+  setTimeout(async()=>{
+    const go=()=>{const v=$('#cve').value.trim().toUpperCase();location.hash=v?'#trace/'+encodeURIComponent(v):'#trace'};
+    $('#go').onclick=go;$('#cve').onkeydown=e=>{if(e.key==='Enter')go()};const out=$('#res');
+    try{
+      if(!arg){const draw=async()=>{const g=await get('/graph?include_vulns='+$('#iv').checked);$('#pic').innerHTML=drawGraph(g.nodes,g.edges)};$('#iv').onchange=draw;await draw();return}
+      const r=await fetch('/trace/'+encodeURIComponent(arg));
+      if(r.status===404){out.innerHTML=`<div class="err"><b>${esc(arg)}</b> was not found in the security graph. Enter another identifier.</div>`;return}
+      if(!r.ok)throw new Error('/trace → '+r.status);
+      out.innerHTML=traceHtml(await r.json())
+    }catch(e){out.innerHTML=`<div class="err">${esc(e.message)}</div>`}});
+  return `<h2>Trace a Vulnerability</h2><p class="sub">Pick a CVE to see the packages and functions it affects, how exposed they are, and the path it takes to reach resources. Leave it empty to see the whole security graph.</p>
+  <div class="bar"><input id="cve" list="cves" placeholder="CVE-YYYY-NNNN" size="26" value="${esc(arg||'')}"><datalist id="cves">${ids.map(i=>`<option value="${i}">`).join('')}</datalist><button id="go">Trace</button>${arg?'<a href="#trace" style="align-self:center">Show whole graph</a>':''}</div>
+  <div id="res">${arg?'Loading…':'<label><input type="checkbox" id="iv"> include vulnerability nodes</label><div class="box tw" id="pic" style="margin-top:10px">Loading…</div>'}</div>`;
+},
+async compare(){
+  const all=Object.fromEntries(await Promise.all(Object.keys(METHODS).map(async m=>[m,await get('/priorities?method='+m)])));
+  const draw=()=>{const n=Math.max(1,+$('#n').value||10);
+    const top=m=>all[m].slice(0,n), ids=m=>new Set(top(m).map(i=>i.id));
+    const ov=m=>[...ids(m)].filter(x=>ids('arch').has(x)).length;
+    $('#lists').innerHTML=Object.keys(METHODS).map(m=>`<div><h3>${METHODS[m]}</h3><div class="tw"><table><tbody>${top(m).map(i=>
+      `<tr><td><b>#${i.rank}</b></td><td>${esc(short(i))}</td><td>${i.score}</td></tr>`).join('')}</tbody></table></div></div>`).join('');
+    $('#ov').innerHTML=`Overlap of top ${n} with the architecture-aware list: CVSS only <b>${ov('cvss')}/${n}</b>, CVSS + EPSS <b>${ov('cvss_epss')}/${n}</b>.`;
+    charts.forEach(c=>c.destroy());charts=[];
+    if(!window.Chart){$('#cv').outerHTML='<div class="err">Chart.js could not load (no internet?). The tables still work.</div>';return}
+    const byId=Object.fromEntries(all.arch.map(i=>[i.id,i])), t=top('arch'), cl=['#9aa5b5','#e0a33a','#2f5fd0'];
+    charts.push(new Chart($('#cv'),{type:'bar',data:{labels:t.map(short),datasets:Object.keys(METHODS).map((m,k)=>({label:METHODS[m],backgroundColor:cl[k],
+      data:t.map(i=>byId[i.id].scores[m])}))},options:{scales:{y:{title:{display:true,text:'Score (0–100)'}},x:{ticks:{maxRotation:60}}}}}));
+  };
+  setTimeout(()=>{$('#n').oninput=draw;draw()});
+  return `<h2>Comparison</h2><p class="sub">Top findings under each method.</p>
+  <div class="bar"><label>Top N <input id="n" type="number" min="1" max="${all.arch.length}" value="10" style="width:70px"></label></div>
+  <div class="box"><canvas id="cv" height="110"></canvas><p id="ov" class="mut"></p></div><div class="grid" id="lists"></div>`;
+}};
+
+async function route(){
+  const [p,...rest]=(location.hash||'#overview').slice(1).split('/'), page=pages[p]?p:'overview', arg=decodeURIComponent(rest.join('/'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.hash==='#'+page));
+  charts.forEach(c=>c.destroy());charts=[];
+  app.innerHTML='Loading…';
+  try{app.innerHTML=await pages[page](arg)}catch(e){app.innerHTML=`<div class="err">Could not load data: ${esc(e.message)}.<br>Is the API running? Start it with <code>python -m backend.api.main</code> and open <code>http://127.0.0.1:8000</code>.</div>`}
+}
+addEventListener('hashchange',route);route();
+</script></body></html>

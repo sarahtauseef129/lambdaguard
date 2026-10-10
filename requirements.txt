@@ -1,0 +1,9 @@
+networkx
+requests
+packaging
+boto3
+fastapi
+uvicorn[standard]
+httpx
+pandas
+matplotlib

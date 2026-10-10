@@ -1,0 +1,10 @@
+top_n,method_a,method_b,overlap,overlap_pct
+3,arch,cvss,2,67
+3,arch,cvss_epss,1,33
+3,cvss,cvss_epss,2,67
+5,arch,cvss,2,40
+5,arch,cvss_epss,2,40
+5,cvss,cvss_epss,3,60
+10,arch,cvss,7,70
+10,arch,cvss_epss,6,60
+10,cvss,cvss_epss,8,80

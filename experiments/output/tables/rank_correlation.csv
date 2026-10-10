@@ -1,0 +1,4 @@
+method_a,method_b,spearman,kendall_tau_b
+arch,cvss,0.787,0.647
+arch,cvss_epss,0.769,0.623
+cvss,cvss_epss,0.951,0.871

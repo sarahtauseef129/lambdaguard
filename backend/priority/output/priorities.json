@@ -1,0 +1,1458 @@
+{
+  "meta": {
+    "count": 34,
+    "unique_cves": 20,
+    "score_scale": "0-100, higher = more urgent; rank 1 = most urgent, ties share a rank",
+    "methods": {
+      "cvss": "CVSS base score x 10",
+      "cvss_epss": "weighted CVSS + capped EPSS",
+      "arch": "weighted CVSS + EPSS + architecture features"
+    },
+    "config": {
+      "_comment": "Weights are normalised to sum to 1, so you can edit them freely. All scores are on a 0-100 scale.",
+      "arch_weights": {
+        "cvss": 0.35,
+        "epss": 0.1,
+        "is_public": 0.15,
+        "num_affected_functions": 0.1,
+        "layer_shared": 0.05,
+        "iam_privilege": 0.15,
+        "resource_sensitivity": 0.1
+      },
+      "cvss_epss_weights": {
+        "cvss": 0.7,
+        "epss": 0.3
+      },
+      "epss_cap": 0.1,
+      "sensitive_resource_patterns": [
+        "sensitive",
+        "secret",
+        "users",
+        "customer",
+        "payment",
+        "pii"
+      ]
+    }
+  },
+  "priorities": [
+    {
+      "id": "CVE-2026-97689|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2026-97689",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory",
+      "fixed_version": "2.8.0",
+      "cvss": 8.9,
+      "cvss_version": "4.0",
+      "cvss_source": "nvd",
+      "epss": 0.00292,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 89.0,
+        "cvss_epss": 63.18,
+        "arch": 56.44
+      },
+      "ranks": {
+        "cvss": 1,
+        "cvss_epss": 2,
+        "arch": 1
+      },
+      "rank_shift_arch_vs_cvss": 0,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 8.9 (v4.0), EPSS 0.00292. rank 1 by architecture vs 1 by CVSS."
+    },
+    {
+      "id": "CVE-2024-3651|scenario-c-func|idna==2.7",
+      "cve_id": "CVE-2024-3651",
+      "scenario": "scenario_c",
+      "component_type": "function",
+      "component_name": "scenario-c-func",
+      "package": "idna",
+      "version": "2.7",
+      "summary": "Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode",
+      "fixed_version": "3.7",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.01386,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-c-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": false,
+        "layer_shared": false,
+        "iam_level": 3,
+        "reachable_resources": [
+          "arn:aws:s3:::lambdaguard-scenario-c-sensitivebucket-gyfblyxavpju",
+          "arn:aws:dynamodb:us-east-1:597078796873:table/Users"
+        ],
+        "sensitive_resources": [
+          "arn:aws:s3:::lambdaguard-scenario-c-sensitivebucket-gyfblyxavpju",
+          "arn:aws:dynamodb:us-east-1:597078796873:table/Users"
+        ],
+        "resource_sensitivity": 1.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 56.66,
+        "arch": 55.14
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 10,
+        "arch": 2
+      },
+      "rank_shift_arch_vs_cvss": 3,
+      "reason": "No public-facing function affected; wildcard IAM permissions; can reach 2 sensitive resource(s). CVSS 7.5 (v3.1), EPSS 0.01386. rank 2 by architecture vs 5 by CVSS (promoted by 3)."
+    },
+    {
+      "id": "CVE-2023-43804|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2023-43804",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "`Cookie` HTTP header isn't stripped on cross-origin redirects",
+      "fixed_version": "1.26.17",
+      "cvss": 8.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.0136,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 81.0,
+        "cvss_epss": 60.78,
+        "arch": 54.71
+      },
+      "ranks": {
+        "cvss": 3,
+        "cvss_epss": 8,
+        "arch": 3
+      },
+      "rank_shift_arch_vs_cvss": 0,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 8.1 (v3.1), EPSS 0.0136. rank 3 by architecture vs 3 by CVSS."
+    },
+    {
+      "id": "CVE-2026-21441|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2026-21441",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+      "fixed_version": "2.6.3",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.02922,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 61.27,
+        "arch": 54.17
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 4,
+        "arch": 4
+      },
+      "rank_shift_arch_vs_cvss": 1,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.02922. rank 4 by architecture vs 5 by CVSS (promoted by 1)."
+    },
+    {
+      "id": "CVE-2019-11324|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2019-11324",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "Improper Certificate Validation in urllib3",
+      "fixed_version": "1.24.2",
+      "cvss": 7.5,
+      "cvss_version": "3.0",
+      "cvss_source": "nvd",
+      "epss": 0.02836,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 61.01,
+        "arch": 54.09
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 6,
+        "arch": 5
+      },
+      "rank_shift_arch_vs_cvss": 0,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 7.5 (v3.0), EPSS 0.02836. rank 5 by architecture vs 5 by CVSS."
+    },
+    {
+      "id": "CVE-2025-66418|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2025-66418",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3 allows an unbounded number of links in the decompression chain",
+      "fixed_version": "2.6.0",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00682,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 54.55,
+        "arch": 51.93
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 12,
+        "arch": 6
+      },
+      "rank_shift_arch_vs_cvss": -1,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.00682. rank 6 by architecture vs 5 by CVSS (demoted by 1)."
+    },
+    {
+      "id": "CVE-2025-66471|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2025-66471",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3 streaming API improperly handles highly compressed data",
+      "fixed_version": "2.6.0",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00682,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 54.55,
+        "arch": 51.93
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 12,
+        "arch": 6
+      },
+      "rank_shift_arch_vs_cvss": -1,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.00682. rank 6 by architecture vs 5 by CVSS (demoted by 1)."
+    },
+    {
+      "id": "CVE-2018-18074|scenario-a-func|requests==2.19.0",
+      "cve_id": "CVE-2018-18074",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "requests",
+      "version": "2.19.0",
+      "summary": "Insufficiently Protected Credentials in Requests",
+      "fixed_version": "2.20.0",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.07443,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 74.83,
+        "arch": 51.19
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 1,
+        "arch": 8
+      },
+      "rank_shift_arch_vs_cvss": -3,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.07443. rank 8 by architecture vs 5 by CVSS (demoted by 3)."
+    },
+    {
+      "id": "CVE-2020-26137|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2020-26137",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "CRLF injection in urllib3",
+      "fixed_version": "1.25.9",
+      "cvss": 6.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.02269,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 65.0,
+        "cvss_epss": 52.31,
+        "arch": 50.02
+      },
+      "ranks": {
+        "cvss": 15,
+        "cvss_epss": 15,
+        "arch": 9
+      },
+      "rank_shift_arch_vs_cvss": 6,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 6.5 (v3.1), EPSS 0.02269. rank 9 by architecture vs 15 by CVSS (promoted by 6)."
+    },
+    {
+      "id": "CVE-2026-97689|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2026-97689",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory",
+      "fixed_version": "2.8.0",
+      "cvss": 8.9,
+      "cvss_version": "4.0",
+      "cvss_source": "nvd",
+      "epss": 0.00292,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 89.0,
+        "cvss_epss": 63.18,
+        "arch": 48.94
+      },
+      "ranks": {
+        "cvss": 1,
+        "cvss_epss": 2,
+        "arch": 10
+      },
+      "rank_shift_arch_vs_cvss": -9,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 8.9 (v4.0), EPSS 0.00292. rank 10 by architecture vs 1 by CVSS (demoted by 9)."
+    },
+    {
+      "id": "CVE-2024-37891|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2024-37891",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3's Proxy-Authorization request header isn't stripped during cross-origin redirects",
+      "fixed_version": "1.26.19",
+      "cvss": 6.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.01141,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 65.0,
+        "cvss_epss": 48.92,
+        "arch": 48.89
+      },
+      "ranks": {
+        "cvss": 15,
+        "cvss_epss": 18,
+        "arch": 11
+      },
+      "rank_shift_arch_vs_cvss": 4,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 6.5 (v3.1), EPSS 0.01141. rank 11 by architecture vs 15 by CVSS (promoted by 4)."
+    },
+    {
+      "id": "CVE-2019-11236|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2019-11236",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "Improper Neutralization of CRLF Sequences in urllib3 library for Python",
+      "fixed_version": "1.24.3",
+      "cvss": 6.1,
+      "cvss_version": "3.0",
+      "cvss_source": "nvd",
+      "epss": 0.02073,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 48.92,
+        "arch": 48.42
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 18,
+        "arch": 12
+      },
+      "rank_shift_arch_vs_cvss": 7,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 6.1 (v3.0), EPSS 0.02073. rank 12 by architecture vs 19 by CVSS (promoted by 7)."
+    },
+    {
+      "id": "CVE-2023-43804|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2023-43804",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "`Cookie` HTTP header isn't stripped on cross-origin redirects",
+      "fixed_version": "1.26.17",
+      "cvss": 8.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.0136,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 81.0,
+        "cvss_epss": 60.78,
+        "arch": 47.21
+      },
+      "ranks": {
+        "cvss": 3,
+        "cvss_epss": 8,
+        "arch": 13
+      },
+      "rank_shift_arch_vs_cvss": -10,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 8.1 (v3.1), EPSS 0.0136. rank 13 by architecture vs 3 by CVSS (demoted by 10)."
+    },
+    {
+      "id": "CVE-2018-25091|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2018-25091",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "Authorization Header forwarded on redirect",
+      "fixed_version": "1.24.2",
+      "cvss": 6.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00516,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 44.25,
+        "arch": 46.87
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 22,
+        "arch": 14
+      },
+      "rank_shift_arch_vs_cvss": 5,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 6.1 (v3.1), EPSS 0.00516. rank 14 by architecture vs 19 by CVSS (promoted by 5)."
+    },
+    {
+      "id": "CVE-2025-50181|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2025-50181",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation",
+      "fixed_version": "2.5.0",
+      "cvss": 6.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00474,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 44.12,
+        "arch": 46.82
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 24,
+        "arch": 15
+      },
+      "rank_shift_arch_vs_cvss": 4,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 6.1 (v3.1), EPSS 0.00474. rank 15 by architecture vs 19 by CVSS (promoted by 4)."
+    },
+    {
+      "id": "CVE-2026-21441|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2026-21441",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)",
+      "fixed_version": "2.6.3",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.02922,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 61.27,
+        "arch": 46.67
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 4,
+        "arch": 16
+      },
+      "rank_shift_arch_vs_cvss": -11,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.02922. rank 16 by architecture vs 5 by CVSS (demoted by 11)."
+    },
+    {
+      "id": "CVE-2019-11324|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2019-11324",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "Improper Certificate Validation in urllib3",
+      "fixed_version": "1.24.2",
+      "cvss": 7.5,
+      "cvss_version": "3.0",
+      "cvss_source": "nvd",
+      "epss": 0.02836,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 61.01,
+        "arch": 46.59
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 6,
+        "arch": 17
+      },
+      "rank_shift_arch_vs_cvss": -12,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 7.5 (v3.0), EPSS 0.02836. rank 17 by architecture vs 5 by CVSS (demoted by 12)."
+    },
+    {
+      "id": "CVE-2026-45409|scenario-c-func|idna==2.7",
+      "cve_id": "CVE-2026-45409",
+      "scenario": "scenario_c",
+      "component_type": "function",
+      "component_name": "scenario-c-func",
+      "package": "idna",
+      "version": "2.7",
+      "summary": "Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix",
+      "fixed_version": "3.15",
+      "cvss": 5.3,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00457,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-c-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": false,
+        "layer_shared": false,
+        "iam_level": 3,
+        "reachable_resources": [
+          "arn:aws:s3:::lambdaguard-scenario-c-sensitivebucket-gyfblyxavpju",
+          "arn:aws:dynamodb:us-east-1:597078796873:table/Users"
+        ],
+        "sensitive_resources": [
+          "arn:aws:s3:::lambdaguard-scenario-c-sensitivebucket-gyfblyxavpju",
+          "arn:aws:dynamodb:us-east-1:597078796873:table/Users"
+        ],
+        "resource_sensitivity": 1.0
+      },
+      "scores": {
+        "cvss": 53.0,
+        "cvss_epss": 38.47,
+        "arch": 46.51
+      },
+      "ranks": {
+        "cvss": 28,
+        "cvss_epss": 29,
+        "arch": 18
+      },
+      "rank_shift_arch_vs_cvss": 10,
+      "reason": "No public-facing function affected; wildcard IAM permissions; can reach 2 sensitive resource(s). CVSS 5.3 (v3.1), EPSS 0.00457. rank 18 by architecture vs 28 by CVSS (promoted by 10)."
+    },
+    {
+      "id": "CVE-2024-3651|scenario-a-func|idna==2.7",
+      "cve_id": "CVE-2024-3651",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "idna",
+      "version": "2.7",
+      "summary": "Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode",
+      "fixed_version": "3.7",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.01386,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 56.66,
+        "arch": 45.14
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 10,
+        "arch": 19
+      },
+      "rank_shift_arch_vs_cvss": -14,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.01386. rank 19 by architecture vs 5 by CVSS (demoted by 14)."
+    },
+    {
+      "id": "CVE-2025-66471|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2025-66471",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "urllib3 streaming API improperly handles highly compressed data",
+      "fixed_version": "2.6.0",
+      "cvss": 7.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00682,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 75.0,
+        "cvss_epss": 54.55,
+        "arch": 44.43
+      },
+      "ranks": {
+        "cvss": 5,
+        "cvss_epss": 12,
+        "arch": 20
+      },
+      "rank_shift_arch_vs_cvss": -15,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 7.5 (v3.1), EPSS 0.00682. rank 20 by architecture vs 5 by CVSS (demoted by 15)."
+    },
+    {
+      "id": "CVE-2026-44431|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2026-44431",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+      "fixed_version": "2.7.0",
+      "cvss": 5.3,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00339,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 53.0,
+        "cvss_epss": 38.12,
+        "arch": 43.89
+      },
+      "ranks": {
+        "cvss": 28,
+        "cvss_epss": 31,
+        "arch": 21
+      },
+      "rank_shift_arch_vs_cvss": 7,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 5.3 (v3.1), EPSS 0.00339. rank 21 by architecture vs 28 by CVSS (promoted by 7)."
+    },
+    {
+      "id": "CVE-2020-26137|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2020-26137",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "CRLF injection in urllib3",
+      "fixed_version": "1.25.9",
+      "cvss": 6.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.02269,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 65.0,
+        "cvss_epss": 52.31,
+        "arch": 42.52
+      },
+      "ranks": {
+        "cvss": 15,
+        "cvss_epss": 15,
+        "arch": 22
+      },
+      "rank_shift_arch_vs_cvss": -7,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 6.5 (v3.1), EPSS 0.02269. rank 22 by architecture vs 15 by CVSS (demoted by 7)."
+    },
+    {
+      "id": "CVE-2023-32681|scenario-a-func|requests==2.19.0",
+      "cve_id": "CVE-2023-32681",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "requests",
+      "version": "2.19.0",
+      "summary": "Unintended leak of Proxy-Authorization header in requests",
+      "fixed_version": "2.31.0",
+      "cvss": 6.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.02974,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 51.62,
+        "arch": 41.82
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 17,
+        "arch": 23
+      },
+      "rank_shift_arch_vs_cvss": -4,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 6.1 (v3.1), EPSS 0.02974. rank 23 by architecture vs 19 by CVSS (demoted by 4)."
+    },
+    {
+      "id": "CVE-2024-37891|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2024-37891",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "urllib3's Proxy-Authorization request header isn't stripped during cross-origin redirects",
+      "fixed_version": "1.26.19",
+      "cvss": 6.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.01141,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 65.0,
+        "cvss_epss": 48.92,
+        "arch": 41.39
+      },
+      "ranks": {
+        "cvss": 15,
+        "cvss_epss": 18,
+        "arch": 24
+      },
+      "rank_shift_arch_vs_cvss": -9,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 6.5 (v3.1), EPSS 0.01141. rank 24 by architecture vs 15 by CVSS (demoted by 9)."
+    },
+    {
+      "id": "CVE-2019-11236|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2019-11236",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "Improper Neutralization of CRLF Sequences in urllib3 library for Python",
+      "fixed_version": "1.24.3",
+      "cvss": 6.1,
+      "cvss_version": "3.0",
+      "cvss_source": "nvd",
+      "epss": 0.02073,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 48.92,
+        "arch": 40.92
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 18,
+        "arch": 25
+      },
+      "rank_shift_arch_vs_cvss": -6,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 6.1 (v3.0), EPSS 0.02073. rank 25 by architecture vs 19 by CVSS (demoted by 6)."
+    },
+    {
+      "id": "CVE-2023-45803|common-utils-layer|urllib3==1.24.1",
+      "cve_id": "CVE-2023-45803",
+      "scenario": "scenario_b",
+      "component_type": "layer",
+      "component_name": "common-utils-layer",
+      "package": "urllib3",
+      "version": "1.24.1",
+      "summary": "urllib3's request body not stripped after redirect from 303 status changes request method to GET",
+      "fixed_version": "1.26.18",
+      "cvss": 4.2,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00544,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-b-func-1",
+          "scenario-b-func-2"
+        ],
+        "num_affected_functions": 2,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": true,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 42.0,
+        "cvss_epss": 31.03,
+        "arch": 40.24
+      },
+      "ranks": {
+        "cvss": 33,
+        "cvss_epss": 33,
+        "arch": 26
+      },
+      "rank_shift_arch_vs_cvss": 7,
+      "reason": "Reaches a public-facing function; in a shared layer, so it affects 2 functions; no extra IAM permissions. CVSS 4.2 (v3.1), EPSS 0.00544. rank 26 by architecture vs 33 by CVSS (promoted by 7)."
+    },
+    {
+      "id": "CVE-2018-25091|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2018-25091",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "Authorization Header forwarded on redirect",
+      "fixed_version": "1.24.2",
+      "cvss": 6.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00516,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 44.25,
+        "arch": 39.37
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 22,
+        "arch": 27
+      },
+      "rank_shift_arch_vs_cvss": -8,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 6.1 (v3.1), EPSS 0.00516. rank 27 by architecture vs 19 by CVSS (demoted by 8)."
+    },
+    {
+      "id": "CVE-2025-50181|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2025-50181",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation",
+      "fixed_version": "2.5.0",
+      "cvss": 6.1,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00474,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 61.0,
+        "cvss_epss": 44.12,
+        "arch": 39.32
+      },
+      "ranks": {
+        "cvss": 19,
+        "cvss_epss": 24,
+        "arch": 28
+      },
+      "rank_shift_arch_vs_cvss": -9,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 6.1 (v3.1), EPSS 0.00474. rank 28 by architecture vs 19 by CVSS (demoted by 9)."
+    },
+    {
+      "id": "CVE-2024-35195|scenario-a-func|requests==2.19.0",
+      "cve_id": "CVE-2024-35195",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "requests",
+      "version": "2.19.0",
+      "summary": "Requests `Session` object does not verify requests after making first request with verify=False",
+      "fixed_version": "2.32.0",
+      "cvss": 5.6,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.0034,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 56.0,
+        "cvss_epss": 40.22,
+        "arch": 37.44
+      },
+      "ranks": {
+        "cvss": 26,
+        "cvss_epss": 26,
+        "arch": 29
+      },
+      "rank_shift_arch_vs_cvss": -3,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 5.6 (v3.1), EPSS 0.0034. rank 29 by architecture vs 26 by CVSS (demoted by 3)."
+    },
+    {
+      "id": "CVE-2024-47081|scenario-a-func|requests==2.19.0",
+      "cve_id": "CVE-2024-47081",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "requests",
+      "version": "2.19.0",
+      "summary": "Requests vulnerable to .netrc credentials leak via malicious URLs",
+      "fixed_version": "2.32.4",
+      "cvss": 5.3,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.0098,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 53.0,
+        "cvss_epss": 40.04,
+        "arch": 37.03
+      },
+      "ranks": {
+        "cvss": 28,
+        "cvss_epss": 27,
+        "arch": 30
+      },
+      "rank_shift_arch_vs_cvss": -2,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 5.3 (v3.1), EPSS 0.0098. rank 30 by architecture vs 28 by CVSS (demoted by 2)."
+    },
+    {
+      "id": "CVE-2026-25645|scenario-a-func|requests==2.19.0",
+      "cve_id": "CVE-2026-25645",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "requests",
+      "version": "2.19.0",
+      "summary": "Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function",
+      "fixed_version": "2.33.0",
+      "cvss": 5.5,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00185,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 55.0,
+        "cvss_epss": 39.05,
+        "arch": 36.94
+      },
+      "ranks": {
+        "cvss": 27,
+        "cvss_epss": 28,
+        "arch": 31
+      },
+      "rank_shift_arch_vs_cvss": -4,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 5.5 (v3.1), EPSS 0.00185. rank 31 by architecture vs 27 by CVSS (demoted by 4)."
+    },
+    {
+      "id": "CVE-2026-45409|scenario-a-func|idna==2.7",
+      "cve_id": "CVE-2026-45409",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "idna",
+      "version": "2.7",
+      "summary": "Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix",
+      "fixed_version": "3.15",
+      "cvss": 5.3,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00457,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 53.0,
+        "cvss_epss": 38.47,
+        "arch": 36.51
+      },
+      "ranks": {
+        "cvss": 28,
+        "cvss_epss": 29,
+        "arch": 32
+      },
+      "rank_shift_arch_vs_cvss": -4,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 5.3 (v3.1), EPSS 0.00457. rank 32 by architecture vs 28 by CVSS (demoted by 4)."
+    },
+    {
+      "id": "CVE-2026-44431|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2026-44431",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "urllib3: Sensitive headers forwarded across origins in proxied low-level redirects",
+      "fixed_version": "2.7.0",
+      "cvss": 5.3,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00339,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 53.0,
+        "cvss_epss": 38.12,
+        "arch": 36.39
+      },
+      "ranks": {
+        "cvss": 28,
+        "cvss_epss": 31,
+        "arch": 33
+      },
+      "rank_shift_arch_vs_cvss": -5,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 5.3 (v3.1), EPSS 0.00339. rank 33 by architecture vs 28 by CVSS (demoted by 5)."
+    },
+    {
+      "id": "CVE-2023-45803|scenario-a-func|urllib3==1.23",
+      "cve_id": "CVE-2023-45803",
+      "scenario": "scenario_a",
+      "component_type": "function",
+      "component_name": "scenario-a-func",
+      "package": "urllib3",
+      "version": "1.23",
+      "summary": "urllib3's request body not stripped after redirect from 303 status changes request method to GET",
+      "fixed_version": "1.26.18",
+      "cvss": 4.2,
+      "cvss_version": "3.1",
+      "cvss_source": "nvd",
+      "epss": 0.00544,
+      "features": {
+        "in_graph": true,
+        "affected_functions": [
+          "scenario-a-func"
+        ],
+        "num_affected_functions": 1,
+        "total_functions": 4,
+        "is_public": true,
+        "layer_shared": false,
+        "iam_level": 0,
+        "reachable_resources": [],
+        "sensitive_resources": [],
+        "resource_sensitivity": 0.0
+      },
+      "scores": {
+        "cvss": 42.0,
+        "cvss_epss": 31.03,
+        "arch": 32.74
+      },
+      "ranks": {
+        "cvss": 33,
+        "cvss_epss": 33,
+        "arch": 34
+      },
+      "rank_shift_arch_vs_cvss": -1,
+      "reason": "Reaches a public-facing function; no extra IAM permissions. CVSS 4.2 (v3.1), EPSS 0.00544. rank 34 by architecture vs 33 by CVSS (demoted by 1)."
+    }
+  ]
+}
